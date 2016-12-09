@@ -2,24 +2,40 @@ package com.cognizant.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.cognizant.helper.CustomerBuilder;
 
 
 @Entity
 @XmlRootElement
 public class Customer {
-	@Id @GeneratedValue
-	private Long id;
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long personId;
 	private String firstName;
 	private String lastName;
 	private String email;
 	private Long phoneNumber;
-	public Long getId() {
-		return id;
+	
+	public Customer(){
+        super();
+    }
+
+    public Customer(CustomerBuilder customerBuilder) {
+        super();
+        this.firstName = customerBuilder.getFirstName();
+        this.lastName = customerBuilder.getLastName();
+        this.email = customerBuilder.getEmail();
+        this.phoneNumber = customerBuilder.getPhoneNumber();
+    }
+	
+	public Long getPersonId() {
+		return personId;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setPersonId(Long personId) {
+		this.personId = personId;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -47,7 +63,7 @@ public class Customer {
 	}
 	@Override
 	public String toString() {
-		return String.format("Customer [id=%s, firstName=%s, lastName=%s, email=%s, phoneNumber=%s]", id, firstName,
+		return String.format("Customer [personId=%s, firstName=%s, lastName=%s, email=%s, phoneNumber=%s]", personId, firstName,
 				lastName, email, phoneNumber);
 	}
 	@Override

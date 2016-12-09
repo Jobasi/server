@@ -15,6 +15,15 @@
 		<property name="validator">
 			<ref bean="Validator"/>
 		</property>
+		<property name="customerDAO">
+			<ref bean="CustomerDAO"/>
+		</property>
+	</bean>
+	
+	<bean id="CustomerDAO" class="com.cognizant.dao.CustomerDAO">
+		<property name="validator">
+			<ref bean="Validator"/>
+		</property>
 	</bean>
 	
 </beans>
