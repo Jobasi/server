@@ -10,8 +10,16 @@ public class CustomerBuilder {
 
 
     public CustomerBuilder(String firstName, String lastName) {
-        this.firstName = firstName;
+    	try{
+    		if((firstName == null) && (lastName == null) ){
+        		throw new Exception();
+        	}
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    	this.firstName = firstName;
         this.lastName = lastName;
+        
     }
 
     public CustomerBuilder withEmail(String email) {
