@@ -1,5 +1,7 @@
 package com.cognizant.rest;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -77,6 +79,13 @@ public class CustomerService {
 		
 		return customerDAO.findCustomerById(3L);
 		
+	}
+	
+	@GET
+	@Path(value="/list")
+	@Produces(MediaType.APPLICATION_XML)
+	public List<Customer> getAllCustomers(){	
+		return customerDAO.fetchAllCustomers();
 	}
 	
 }
