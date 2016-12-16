@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.cognizant.dao.CustomerDAO;
 import com.cognizant.entity.Customer;
 import com.cognizant.helper.CustomerBuilder;
+import com.cognizant.helper.CustomerList;
 import com.cognizant.helper.Validator;
 
 @Component
@@ -68,10 +69,17 @@ public class CustomerService {
 	@Produces(MediaType.APPLICATION_XML)
 	public Customer createCustomer(JAXBElement<Customer> cus){
 		Customer c = cus.getValue();
-		Customer customer = new CustomerBuilder(c.getFirstName(), c.getLastName())
-				.withEmail(c.getEmail())
-				.withPhone(c.getPhoneNumber())
-				.build();
+		Customer customer = new Customer();
+		try {
+			customer = new CustomerBuilder(c.getFirstName(), c.getLastName())
+					.withEmail(c.getEmail())
+					.withPhone(c.getPhoneNumber())
+					.build();	
+		} catch (Exception e) {
+			// TODO: Write To Log 
+			e.printStackTrace();
+			return customer;
+		}
 		
 		customerDAO.save(customer);
 		
@@ -84,7 +92,7 @@ public class CustomerService {
 	@GET
 	@Path(value="/list")
 	@Produces(MediaType.APPLICATION_XML)
-	public List<Customer> getAllCustomers(){	
+	public CustomerList getAllCustomers(){	
 		return customerDAO.fetchAllCustomers();
 	}
 	

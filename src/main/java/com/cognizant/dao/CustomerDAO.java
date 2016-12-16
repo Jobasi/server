@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import com.cognizant.entity.Customer;
+import com.cognizant.helper.CustomerList;
 import com.cognizant.helper.Validator;
 
 public class CustomerDAO {
@@ -35,14 +36,17 @@ public class CustomerDAO {
 	    	entityManager.close();
 	    }
 	    @SuppressWarnings("unchecked")
-	    public List<Customer> fetchAllCustomers(){
+	    public CustomerList fetchAllCustomers(){
 	    	this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 			this.entityManager = this.factory.createEntityManager();
 	    	entityManager.getTransaction().begin();
 	        Query query = entityManager.createQuery("SELECT c FROM Customer c");
 	        List<Customer> customer = (List<Customer>) query.getResultList(); 
 	        entityManager.close();
-	        return customer;
+	        CustomerList customerList = new CustomerList();
+	        customerList.setCustomer(customer);
+	        return customerList;
+	        //return customer;
 	    }
 
 	    public Customer findCustomerById(long id){

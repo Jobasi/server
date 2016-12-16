@@ -10,7 +10,7 @@ import com.cognizant.helper.CustomerBuilder;
 
 
 @Entity
-@XmlRootElement
+@XmlRootElement(name="customer")
 public class Customer {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long personId;
