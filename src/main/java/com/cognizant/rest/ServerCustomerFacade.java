@@ -20,7 +20,7 @@ import com.cognizant.helper.Validator;
 
 @Component
 @Path(value="/customer")
-public class CustomerService {
+public class ServerCustomerFacade {
 	
 	private CustomerDAO customerDAO;
 	

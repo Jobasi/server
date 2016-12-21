@@ -18,7 +18,7 @@
   
 
   <servlet>
-    <servlet-name>CustomerService</servlet-name>
+    <servlet-name>ServerCustomerFacade</servlet-name>
     <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
     <init-param>
         <param-name>jersey.config.server.provider.packages</param-name>
@@ -28,7 +28,7 @@
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>CustomerService</servlet-name>
+    <servlet-name>ServerCustomerFacade</servlet-name>
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
   

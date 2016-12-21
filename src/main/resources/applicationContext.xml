@@ -11,7 +11,7 @@
 	<bean id="Validator" class="com.cognizant.helper.Validator" />
 	
 	
-	<bean id="CustomerService" class="com.cognizant.rest.CustomerService">
+	<bean id="ServerCustomerFacade" class="com.cognizant.rest.ServerCustomerFacade">
 		<property name="validator">
 			<ref bean="Validator"/>
 		</property>
