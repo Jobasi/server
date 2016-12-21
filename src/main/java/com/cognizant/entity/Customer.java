@@ -61,6 +61,14 @@ public class Customer {
 	public void setPhoneNumber(Long phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	
+	public boolean isEmpty() {
+		if (email == null ){
+			return true;
+		}
+		return false;
+		
+	}
 	@Override
 	public String toString() {
 		return String.format("Customer [personId=%s, firstName=%s, lastName=%s, email=%s, phoneNumber=%s]", personId, firstName,

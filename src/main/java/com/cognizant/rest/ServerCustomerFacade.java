@@ -6,8 +6,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
 
 import org.springframework.stereotype.Component;
@@ -43,44 +45,29 @@ public class ServerCustomerFacade {
 	@GET
 	@Path(value="/hello")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String sayHello(){
-		return "Hello from the other side!!!";
+	public Response sayHello(){
+		return Response.status(200).build();	     
 		
 		
 	}
 	@GET
-	@Path(value="/find")
+	@Path(value="/find/{id}")
 	@Produces(MediaType.APPLICATION_XML)
-	public com.cognizant.entity.Customer findCustomer(){
-		Customer customer  = new Customer();
-		
-		customer.setPersonId(1L);
-		customer.setFirstName("James");
-		customer.setLastName("Bond");
-		customer.setEmail("james@bond.de");
-		customer.setPhoneNumber(223344551L);
-	
-		return customer;
+	public Response findCustomer(@PathParam(value = "id") Long id){
+		return customerDAO.findCustomerById(id);	     
 	}
 	
 	@POST
 	@Path(value="/create")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Customer createCustomer(JAXBElement<Customer> cus){
+	public Response createCustomer(JAXBElement<Customer> cus){
 		Customer c = cus.getValue();
 		Customer customer = new Customer();
-		try {
-			customer = new CustomerBuilder(c.getFirstName(), c.getLastName())
-					.withEmail(c.getEmail())
-					.withPhone(c.getPhoneNumber())
-					.build();	
-		} catch (Exception e) {
-			// TODO: Write To Log 
-			e.printStackTrace();
-			return customer;
-		}
-		
+		customer = new CustomerBuilder(c.getFirstName(), c.getLastName())
+				.withEmail(c.getEmail())
+				.withPhone(c.getPhoneNumber())
+				.build();	
 		customerDAO.save(customer);
 		
 		//Long customerId = customerDAO.save(customer);
@@ -92,7 +79,7 @@ public class ServerCustomerFacade {
 	@GET
 	@Path(value="/list")
 	@Produces(MediaType.APPLICATION_XML)
-	public CustomerList getAllCustomers(){	
+	public Response getAllCustomers(){	
 		return customerDAO.fetchAllCustomers();
 	}
 	

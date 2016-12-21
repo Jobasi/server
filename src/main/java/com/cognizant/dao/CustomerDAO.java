@@ -6,8 +6,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.ws.rs.core.Response;
 
 import com.cognizant.entity.Customer;
+import com.cognizant.helper.BaseClass;
 import com.cognizant.helper.CustomerList;
 import com.cognizant.helper.Validator;
 
@@ -27,59 +29,119 @@ public class CustomerDAO {
 	        this.validator = validator;
 	        }
 	
-	    public void save(Customer customer){
-	    	this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-			this.entityManager = this.factory.createEntityManager();
-	    	entityManager.getTransaction().begin();
-	    	entityManager.persist(customer);
-	    	entityManager.getTransaction().commit();
-	    	entityManager.close();
+	    public Response save(Customer customer){
+	    	try {
+	    		this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+				this.entityManager = this.factory.createEntityManager();
+		    	entityManager.getTransaction().begin();
+		    	entityManager.persist(customer);
+		    	entityManager.getTransaction().commit();
+		    	entityManager.close();
+		    	return Response.status(201).entity(customer).build();
+				
+			} catch (Exception e) {
+				return Response.status(500).entity(e).build();
+			}
+	    	
 	    }
 	    @SuppressWarnings("unchecked")
-	    public CustomerList fetchAllCustomers(){
-	    	this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-			this.entityManager = this.factory.createEntityManager();
-	    	entityManager.getTransaction().begin();
-	        Query query = entityManager.createQuery("SELECT c FROM Customer c");
-	        List<Customer> customer = (List<Customer>) query.getResultList(); 
-	        entityManager.close();
-	        CustomerList customerList = new CustomerList();
-	        customerList.setCustomer(customer);
-	        return customerList;
-	        //return customer;
+	    public Response fetchAllCustomers(){
+	    	try {
+		    	this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+				this.entityManager = this.factory.createEntityManager();
+		    	entityManager.getTransaction().begin();
+		        Query query = entityManager.createQuery("SELECT c FROM Customer c");
+		        List<Customer> customer = (List<Customer>) query.getResultList(); 
+		        if (customer.isEmpty()){
+		        	return Response.status(404).build();
+		        }
+		        entityManager.close();
+		        CustomerList customerList = new CustomerList();
+		        customerList.setCustomer(customer);
+		       
+		        return Response.status(200).entity(customerList).build();	  
+			} catch (Exception e) {
+				return Response.status(500).entity(e).build();			
+				
+			}
+      
+	     
 	    }
 
-	    public Customer findCustomerById(long id){
-	    	this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-			this.entityManager = this.factory.createEntityManager();
-	    	entityManager.getTransaction().begin();
-	        Customer customer = entityManager.find(Customer.class, id); 
-	        entityManager.close();
-	        return customer;
+	    public Response findCustomerById(long id){
+	    	try {
+	    		this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+				this.entityManager = this.factory.createEntityManager();
+		    	entityManager.getTransaction().begin();
+		        Customer customer = entityManager.find(Customer.class, id);
+		        if (customer == null){
+		        	return Response.status(404).build();
+		        }
+		        entityManager.close();
+		        return Response.status(200).entity(customer).build();
+			} catch (Exception e) {
+				return Response.status(500).entity(e).build();
+			}
+	    	
 
 	    }
 
-	    public void updateCustomer(Customer customer){
+	    public Response updateCustomer(Customer customer){
+	    	try {
+	    		this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+				this.entityManager = this.factory.createEntityManager();
+				Customer customer2 = entityManager.find(Customer.class, customer.getPersonId());
+				entityManager.getTransaction().begin();
+		    	
+		    	customer2.setEmail(customer.getEmail());
+		    	customer2.setFirstName(customer.getFirstName());
+		    	customer2.setLastName(customer.getLastName());
+		    	customer2.setPhoneNumber(customer.getPersonId());
+		    	
+		    	entityManager.getTransaction().commit();
+		    	
+		    	return Response.status(201).entity(customer2).build();
+			} catch (Exception e) {
+				return Response.status(500).entity(e).build();
+			}
+	    	
 	
 	    }
 
-	    public void delete(Customer customer){
-	    	this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-			this.entityManager = this.factory.createEntityManager();
-	    	entityManager.getTransaction().begin();
-	    	entityManager.remove(customer);
-	    	entityManager.getTransaction().commit();
-	    	entityManager.close(); 
+	    public Response delete(Customer customer){
+	    	try {
+	    		this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+				this.entityManager = this.factory.createEntityManager();
+		    	entityManager.getTransaction().begin();
+		    	entityManager.remove(customer);
+		    	entityManager.getTransaction().commit();
+		    	entityManager.close(); 
+		    	return Response.status(200).build();
+				
+			} catch (Exception e) {
+				return Response.status(500).entity(e).build();
+			}
+	    	
+	    	
+	    	
 	    }
 
-	    public Customer findCustomerByEmail(String email){
-	    	this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-			this.entityManager = this.factory.createEntityManager();
-	    	entityManager.getTransaction().begin();
-	    	Query query = entityManager.createQuery("SELECT c FROM Customer WHERE c.email = :email");
-	    	Customer customer = (Customer)query.getSingleResult();
-	    	entityManager.close();
-	    	return customer;
+	    public Response findCustomerByEmail(String email){
+	    	try {
+	    		this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+				this.entityManager = this.factory.createEntityManager();
+		    	entityManager.getTransaction().begin();
+		    	Query query = entityManager.createQuery("SELECT c FROM Customer WHERE c.email = :email");
+		    	Customer customer = (Customer)query.getSingleResult();
+		    	entityManager.close();
+		    	if (customer == null){
+		        	return Response.status(404).build();
+		        }
+		    	return Response.status(200).entity(customer).build();
+			} catch (Exception e) {
+				return Response.status(500).entity(e).build();
+			}
+	    	
 	    }
 }
 
