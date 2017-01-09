@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import javax.ws.rs.core.Response;
 
 import com.cognizant.entity.Customer;
+import com.cognizant.exceptions.CustomerNotFoundException;
 import com.cognizant.helper.BaseClass;
 import com.cognizant.helper.CustomerList;
 import com.cognizant.helper.Validator;
@@ -79,7 +80,7 @@ public class CustomerDAO {
 		        }
 		        entityManager.close();
 		        return Response.status(200).entity(customer).build();
-			} catch (Exception e) {
+			} catch (RuntimeException e) {
 				return Response.status(500).entity(e).build();
 			}
 	    	

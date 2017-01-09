@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.cognizant.dao.CustomerDAO;
 import com.cognizant.entity.Customer;
+import com.cognizant.exceptions.CustomerNotFoundException;
 import com.cognizant.helper.CustomerBuilder;
 import com.cognizant.helper.CustomerList;
 import com.cognizant.helper.Validator;
@@ -61,7 +62,7 @@ public class ServerCustomerFacade {
 	@Path(value="/create")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response createCustomer(JAXBElement<Customer> cus){
+	public Response createCustomer(JAXBElement<Customer> cus) throws CustomerNotFoundException{
 		Customer c = cus.getValue();
 		Customer customer = new Customer();
 		customer = new CustomerBuilder(c.getFirstName(), c.getLastName())
