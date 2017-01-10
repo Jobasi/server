@@ -3,8 +3,10 @@ package com.cognizant.rest;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,8 +19,10 @@ import org.springframework.stereotype.Component;
 import com.cognizant.dao.CustomerDAO;
 import com.cognizant.entity.Customer;
 import com.cognizant.exceptions.CustomerNotFoundException;
+import com.cognizant.exceptions.CustomerNotUpdatedException;
 import com.cognizant.helper.CustomerBuilder;
 import com.cognizant.helper.CustomerList;
+import com.cognizant.helper.StatusCode;
 import com.cognizant.helper.Validator;
 
 @Component
@@ -62,14 +66,8 @@ public class ServerCustomerFacade {
 	@Path(value="/create")
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
-	public Response createCustomer(JAXBElement<Customer> cus) throws CustomerNotFoundException{
-		Customer c = cus.getValue();
-		Customer customer = new Customer();
-		customer = new CustomerBuilder(c.getFirstName(), c.getLastName())
-				.withEmail(c.getEmail())
-				.withPhone(c.getPhoneNumber())
-				.build();	
-		customerDAO.save(customer);
+	public Response createCustomer(JAXBElement<Customer> customer) throws CustomerNotFoundException{
+		customerDAO.save(customer.getValue());
 		
 		//Long customerId = customerDAO.save(customer);
 		
@@ -83,5 +81,30 @@ public class ServerCustomerFacade {
 	public Response getAllCustomers(){	
 		return customerDAO.fetchAllCustomers();
 	}
+	
+	@PUT
+	@Path(value="/update")
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.APPLICATION_XML)
+	public Response updateCustomer(JAXBElement<Customer> customer){
+		return customerDAO.updateCustomer(customer.getValue());
+		
+	}
+	
+	@DELETE
+	@Path(value="/delete/{id}")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response deleteCustomer(@PathParam(value="id") Long id){
+		return customerDAO.deleteCustomer(id);
+		
+	}
+	
+	@GET
+	@Path("/email/{email}")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response findByEmail(@PathParam(value = "email") String email) {
+		return customerDAO.findByEmail(email);
+	}
+	
 	
 }

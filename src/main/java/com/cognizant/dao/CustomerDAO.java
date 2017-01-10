@@ -97,27 +97,29 @@ public class CustomerDAO {
 		    	customer2.setEmail(customer.getEmail());
 		    	customer2.setFirstName(customer.getFirstName());
 		    	customer2.setLastName(customer.getLastName());
-		    	customer2.setPhoneNumber(customer.getPersonId());
+		    	customer2.setPhoneNumber(customer.getPhoneNumber());
 		    	
 		    	entityManager.getTransaction().commit();
 		    	
 		    	return Response.status(201).entity(customer2).build();
 			} catch (Exception e) {
-				return Response.status(500).entity(e).build();
+				return Response.status(400).entity(e).build();
 			}
 	    	
 	
 	    }
 
-	    public Response delete(Customer customer){
+	    public Response deleteCustomer(Long id){
 	    	try {
 	    		this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 				this.entityManager = this.factory.createEntityManager();
-		    	entityManager.getTransaction().begin();
-		    	entityManager.remove(customer);
+				Customer customer = entityManager.find(Customer.class, id);
+				entityManager.getTransaction().begin();
+		    	
+				entityManager.remove(customer);
+		    	
 		    	entityManager.getTransaction().commit();
-		    	entityManager.close(); 
-		    	return Response.status(200).build();
+		    	return Response.status(200).entity(customer).build();
 				
 			} catch (Exception e) {
 				return Response.status(500).entity(e).build();
@@ -127,13 +129,14 @@ public class CustomerDAO {
 	    	
 	    }
 
-	    public Response findCustomerByEmail(String email){
+	    public Response findByEmail(String email){
 	    	try {
 	    		this.factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 				this.entityManager = this.factory.createEntityManager();
 		    	entityManager.getTransaction().begin();
 		    	Query query = entityManager.createQuery("SELECT c FROM Customer WHERE c.email = :email");
 		    	Customer customer = (Customer)query.getSingleResult();
+		    	System.out.println(customer.toString());
 		    	entityManager.close();
 		    	if (customer == null){
 		        	return Response.status(404).build();

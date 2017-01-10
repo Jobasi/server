@@ -7,6 +7,7 @@ public class CustomerBuilder {
     private final String lastName;
     private String email;
     private long phoneNumber;
+    private Long personId;
 
 
     public CustomerBuilder(String firstName, String lastName) {
@@ -31,6 +32,10 @@ public class CustomerBuilder {
         this.phoneNumber = phoneNumber;
         return this;
     }
+    public CustomerBuilder withPersonId(Long personId) {
+		this.personId = personId;
+		return this;
+	}
 
     public Customer build() {
         return new Customer(this);
