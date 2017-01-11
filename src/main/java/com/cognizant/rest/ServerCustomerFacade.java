@@ -1,7 +1,5 @@
 package com.cognizant.rest;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -19,10 +17,6 @@ import org.springframework.stereotype.Component;
 import com.cognizant.dao.CustomerDAO;
 import com.cognizant.entity.Customer;
 import com.cognizant.exceptions.CustomerNotFoundException;
-import com.cognizant.exceptions.CustomerNotUpdatedException;
-import com.cognizant.helper.CustomerBuilder;
-import com.cognizant.helper.CustomerList;
-import com.cognizant.helper.StatusCode;
 import com.cognizant.helper.Validator;
 
 @Component
@@ -47,14 +41,6 @@ public class ServerCustomerFacade {
 		return customerDAO;
 	}
 
-	@GET
-	@Path(value="/hello")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response sayHello(){
-		return Response.status(200).build();	     
-		
-		
-	}
 	@GET
 	@Path(value="/find/{id}")
 	@Produces(MediaType.APPLICATION_XML)
@@ -87,16 +73,14 @@ public class ServerCustomerFacade {
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.APPLICATION_XML)
 	public Response updateCustomer(JAXBElement<Customer> customer){
-		return customerDAO.updateCustomer(customer.getValue());
-		
+		return customerDAO.updateCustomer(customer.getValue());		
 	}
 	
 	@DELETE
 	@Path(value="/delete/{id}")
 	@Produces(MediaType.APPLICATION_XML)
 	public Response deleteCustomer(@PathParam(value="id") Long id){
-		return customerDAO.deleteCustomer(id);
-		
+		return customerDAO.deleteCustomer(id);	
 	}
 	
 	@GET

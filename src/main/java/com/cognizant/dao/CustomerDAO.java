@@ -138,9 +138,6 @@ public class CustomerDAO {
 		    	Customer customer = (Customer)query.getSingleResult();
 		    	System.out.println(customer.toString());
 		    	entityManager.close();
-		    	if (customer == null){
-		        	return Response.status(404).build();
-		        }
 		    	return Response.status(200).entity(customer).build();
 			} catch (Exception e) {
 				return Response.status(500).entity(e).build();
